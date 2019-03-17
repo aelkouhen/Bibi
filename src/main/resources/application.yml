@@ -19,19 +19,51 @@ eureka:
     hostname: localhost
     port: 8000
   client:
+    fetchRegistry: true
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
   server:
     wait-time-in-ms-when-sync-empty: 3000
 
 zuul:
-  ignoredServices: "*"
+  sensitiveHeaders: Cookie,Set-Cookie
+  ignoredServices: '*'
   routes:
     lyne:
-      sensitiveHeaders:
-      path: /**
+      path: /api/**
       serviceId: lyne
+      stripPrefix: false
     mima:
-      sensitiveHeaders:
       path: /**
       serviceId: mima
+
+security:
+  oauth2:
+    resource:
+      token-type: Bearer
+      client:
+        client-id: CLIENT_APP
+        client-secret: password
+      id: CLIENT_RESOURCE
+      jwt:
+        key-value: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzKOkPFC8hoRExHRtkXUK
+          qI1jKU1T0Dr+ReoD6F76w2ZqcvFgqGOOUa+zmXiHCVRNGFVLpIkWYUaulY0r3Nf1
+          9hRbISu/jn51D4cJcIgldlY99QT3oEH9w1M1y8WvFL8wufIaPcn8w05EVLrKtkfO
+          wCb45jwbsW2/QcTQXmSXUV6tD+38DEIUDSAyahw1Vd2ZiPLyhHsQQzCQP5uQ+rur
+          2qnPz3qBpWn0aNsA+xCtyeMr8VIss+uo1BFE3BEzBT6N7nvGxLCYrLGDzO3JQIY1
+          XtDw668XgC/Ft/9WmxpC72txfceocep95L5cd1eKTSwA0fhQJfD3P4PEMtmqzK7E
+          iwIDAQAB
+          -----END PUBLIC KEY-----
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
