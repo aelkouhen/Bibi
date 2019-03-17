@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: Bibi
+  profiles: default
+
+server:
+  port: 8080
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 8000
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 3000
+
+zuul:
+  ignoredServices: "*"
+  routes:
+    lyne:
+      sensitiveHeaders:
+      path: /**
+      serviceId: lyne
+    mima:
+      sensitiveHeaders:
+      path: /**
+      serviceId: mima
