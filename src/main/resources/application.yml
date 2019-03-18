@@ -1,7 +1,6 @@
 spring:
   application:
     name: Bibi
-  profiles: default
 
 server:
   port: 8080
@@ -22,23 +21,25 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
-  server:
-    wait-time-in-ms-when-sync-empty: 3000
 
 zuul:
-  sensitiveHeaders: Cookie,Set-Cookie
-  ignoredServices: '*'
+  prefix: /api
   routes:
-    lyne:
-      path: /api/**
+    auto:
+      path: /auto/**
       serviceId: lyne
       stripPrefix: false
-    mima:
-      path: /**
+      sensitiveHeaders:
+    auth:
+      path: /auth/**
       serviceId: mima
+      stripPrefix: false
+      sensitiveHeaders:
 
 security:
   oauth2:
+    sso:
+      loginPath: /login
     resource:
       token-type: Bearer
       client:
