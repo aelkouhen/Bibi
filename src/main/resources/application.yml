@@ -1,7 +1,12 @@
 spring:
   application:
     name: Bibi
-
+  aop:
+    proxy-target-class: true
+  social:
+    facebook:
+      app-id: 331963721001732
+      app-secret: 36884a5bf449aa541a590945784c0755
 server:
   port: 8080
 
@@ -23,7 +28,7 @@ eureka:
       defaultZone: http://${eureka.instance.hostname}:${eureka.instance.port}/eureka/
 
 zuul:
-  prefix: /api
+#(prefix: /api doesn't work with the other apis context-paths)
   routes:
     auto:
       path: /auto/**
@@ -37,14 +42,17 @@ zuul:
       sensitiveHeaders:
 
 security:
+  basic:
+    enabled: false
   oauth2:
-    sso:
-      loginPath: /login
+    client:
+      clientId: CLIENT_APP
+      clientSecret: password
+      accessTokenUri: http://localhost:9000/auth/oauth/token
+      userAuthorizationUri: http://localhost:9000/auth/oauth/authorize
     resource:
       token-type: Bearer
       client:
-        client-id: CLIENT_APP
-        client-secret: password
       id: CLIENT_RESOURCE
       jwt:
         key-value: |

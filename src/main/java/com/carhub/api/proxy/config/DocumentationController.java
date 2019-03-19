@@ -17,8 +17,8 @@ public class DocumentationController implements SwaggerResourcesProvider {
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        resources.add(swaggerResource("Lyne API - Vehicle foundation service", "/api/auto/v2/api-docs", "1.0"));
-        resources.add(swaggerResource("Mima API - Authentication / Authorization service", "/api/auth/v2/api-docs", "1.0"));
+        resources.add(swaggerResource("Lyne API - Vehicle foundation service", "/auto/v2/api-docs", "1.0"));
+        resources.add(swaggerResource("Mima API - Authentication / Authorization service", "/auth/v2/api-docs", "1.0"));
         return resources;
     }
 
