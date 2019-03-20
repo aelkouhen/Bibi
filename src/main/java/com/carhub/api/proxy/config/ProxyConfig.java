@@ -34,7 +34,6 @@ public class ProxyConfig extends ResourceServerConfigurerAdapter {
                 .permitAll();
     }
 
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.resourceId(resourceId);

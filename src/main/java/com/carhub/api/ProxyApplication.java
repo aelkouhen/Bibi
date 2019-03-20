@@ -3,6 +3,7 @@ package com.carhub.api;
 import com.carhub.api.proxy.filter.AuthHeaderFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,7 @@ import java.util.Calendar;
 @EnableZuulProxy
 @EnableEurekaClient
 @ComponentScan({"com.carhub.api.proxy"})
-public class ProxyApplication {
+public class ProxyApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(ProxyApplication.class, args);
 	}
@@ -104,6 +105,4 @@ public class ProxyApplication {
 			}
 		};
     }
-
-
 }
