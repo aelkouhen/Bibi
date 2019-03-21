@@ -117,12 +117,12 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
+	<script src="js/cookies.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 	<script>
 
 	function getToken() {
-		// var Cookies = require( "cookies" );
 	    var req = new XMLHttpRequest();
 		req.open( "post", "/auth/oauth/token", false); // false for synchronous request
 		req.setRequestHeader("Authorization", "Basic " + window.btoa("ADMIN_APP:admin"));
@@ -139,55 +139,36 @@
 
 		req.send(formData);
 
-		if(req.status == 200)
+		// Begin accessing JSON data here
+		var responseObject = JSON.parse(req.response);
+		if(req.status >= 200 && req.status < 400)
 		{
-			var responseObject = JSON.parse(req.response);
 			var token = responseObject['access_token'];
 			var validity = responseObject['expires_in'];
 			if(token){
-				//new Cookies(req,res).set('access_token', token, {
-				//			httpOnly: true, //cookie not available through client js code
-				//			secure: true // true to force https
-				//			});
-				if(! getCookie('access_token'))
+				if(! Cookies.get('access_token'))
 				{
-					setCookie('access_token', token, validity);
+					Cookies.set('access_token', token,
+							{
+							path: '/', // available across the entire site
+							expires: 1, //expires in 1 day
+							httpOnly: true, //cookie not available through client js code
+							secure: true // true to force https
+							});
 				}
-				redirectUrl("/auto/v1/cars?page=0&size=10&order=asc&field=name");
+				redirectUrl("/content");
 				return;
 			}
 		}
 
-		redirectUrl("/login");
+		const errorMessage = document.createElement('marquee');
+		errorMessage.textContent = `Damn ! Couldn't reach Mima service!`;
+		app.appendChild(errorMessage);
+		//redirectUrl("/login");
 	}
 
 	function redirectUrl(url){
 		location.href = url;
-	}
-
-	function setCookie(name, value, validity) {
-		var expires = "";
-		if (validity) {
-			var date = new Date();
-			date.setTime(date.getTime() + validity);
-			expires = "; expires=" + date.toUTCString();
-		}
-		document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-	}
-
-	function getCookie(name) {
-		var nameEQ = name + "=";
-		var ca = document.cookie.split(';');
-		for(var i=0;i < ca.length;i++) {
-			var c = ca[i];
-			while (c.charAt(0)==' ') c = c.substring(1,c.length);
-			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-		}
-		return null;
-	}
-
-	function eraseCookie(name) {
-    	document.cookie = name+'=; Max-Age=-99999999;';
 	}
 	</script>
 

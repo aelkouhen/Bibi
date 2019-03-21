@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Carhub Content</title>
+
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+    <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/catalog.css">
+    <link href="css/sequence-theme.modern-slide-in.css" rel="stylesheet" media="all">
+
+
+</head>
+
+<body>
+
+<div id="root">
+
+</div>
+
+<script src="js/cookies.js"></script>
+<script src="js/utils.js"></script>
+
+<script>
+
+const app = document.getElementById('root');
+
+const container = document.createElement('div');
+container.setAttribute('class', 'container');
+
+app.appendChild(container);
+
+var request = new XMLHttpRequest();
+var token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiQ0xJRU5UX1JFU09VUkNFIiwiQURNSU5fUkVTT1VSQ0UiXSwidXNlcl9uYW1lIjoiYWRtaW4iLCJzY29wZSI6WyJERUxFVEVfUFJJVklMRUdFIiwiUkVBRF9QUklWSUxFR0UiLCJVUERBVEVfUFJJVklMRUdFIiwiQ1JFQVRFX1BSSVZJTEVHRSJdLCJleHAiOjE1NTMyNDcwODEsImF1dGhvcml0aWVzIjpbIkRFTEVURV9QUklWSUxFR0UiLCJSRUFEX1BSSVZJTEVHRSIsIlJPTEVfQURNSU4iLCJVUERBVEVfUFJJVklMRUdFIiwiQ1JFQVRFX1BSSVZJTEVHRSIsIlJPTEVfVVNFUiJdLCJqdGkiOiI3Y2MyODEyNC1jMjY4LTQyMTctODIxZC05ZDBiZDIwOTY1OTUiLCJlbWFpbCI6ImFkbWluQHVzZXIuaW8iLCJjbGllbnRfaWQiOiJBRE1JTl9BUFAifQ.uzNvmNFozc6oiEmTqwCkFEz1t_PmGCwHYOuvRym_avTlBsOVoJphsIf3qsXw4naX8xP8sRR-m0Yz8Zr00rM1xi6RPZ4cMp06QrmHbCtYxGjpG-hZTYLODlelvtw3mrZoJ0_NvgKl13C6_rp-zWBPX135E9FAhOxHpRa7X-QMnEhnvODDcpvIpG9dcg_Hn1yx5u8vPyKX31DEwkZmVZeSyQ1TBSu0TNcsq1wyx_hreS-A0apjNq-15bAB1pbJhwBa__j7H-NLRpiPLqE5PwG0n89Z_FXempEGE4d2t3fIQHBXiqiDyjVmJUoMPgEtjY31ZcbTrFIs85HawGD51bjVAw';
+//Cookies.get('access_token');
+request.open('GET', '/auto/v1/cars?page=0&size=10&order=asc&field=name', true);
+request.setRequestHeader("Authorization", "Bearer " + token);
+
+request.onload = function () {
+    // Begin accessing JSON data here
+    var cars = JSON.parse(request.response);
+    if (request.status >= 200 && request.status < 400) {
+      cars.forEach(car => {
+        const card = document.createElement('div');
+        card.setAttribute('class', 'card');
+        container.appendChild(card);
+
+        const h1 = document.createElement('h1');
+        h1.textContent = car.name;
+        card.appendChild(h1);
+
+        var req = new XMLHttpRequest();
+        req.open('GET', "/auto/v1/cars/" + car.id + "/photos", true);
+        req.setRequestHeader("Authorization", "Bearer " + token);
+        req.onload = function () {
+              // Begin accessing JSON data here
+              var photos = JSON.parse(req.response);
+              if (req.status >= 200 && req.status < 400) {
+
+                    const sequence = document.createElement('div');
+                    sequence.setAttribute('class', 'seq');
+                    card.appendChild(sequence);
+                    const screen = document.createElement('div');
+                    screen.setAttribute('class', 'seq-screen');
+                    const canvas = document.createElement('ul');
+                    canvas.setAttribute('class', 'seq-canvas');
+                    sequence.appendChild(screen);
+
+                    const nav = document.createElement('fieldset');
+                    nav.setAttribute('class', 'seq-nav');
+                    nav.setAttribute('aria-controls', 'sequence');
+                    nav.setAttribute('aria-label', 'Slider buttons');
+
+                    sequence.appendChild(nav);
+
+                    const prev = document.createElement('button');
+                    prev.setAttribute('class', 'seq-prev');
+                    prev.setAttribute('type', 'button');
+                    prev.setAttribute('aria-label', 'Previous');
+
+                    const next = document.createElement('button');
+                    next.setAttribute('class', 'seq-next');
+                    next.setAttribute('type', 'button');
+                    next.setAttribute('aria-label', 'Next');
+
+                    nav.appendChild(prev);
+                    nav.appendChild(next);
+
+                    screen.appendChild(canvas);
+
+                    photos.forEach(photo => {
+                         const seqIn = document.createElement('li');
+                         seqIn.setAttribute('class', 'seq-in');
+                         canvas.appendChild(seqIn);
+                         const seqModel = document.createElement('div')
+                         seqModel.setAttribute('class', 'seq-model');
+                         seqIn.appendChild(seqModel);
+                         const img = document.createElement('img');
+                         img.src = 'data:'+ photo.mimeType+';base64,' + + hexToBase64(photo.content);
+                         seqIn.appendChild(img);
+                    });
+              } else {
+                const errorMessage = document.createElement('marquee');
+                errorMessage.textContent = `Gah, it's not working!`;
+                app.appendChild(errorMessage);
+              }
+            }
+            req.send();
+        });
+    } else {
+    const errorMessage = document.createElement('marquee');
+    errorMessage.textContent = `Gah, it's not working!`;
+    app.appendChild(errorMessage);
+    }
+}
+request.send();
+
+
+
+</script>
+
+<script src="js/imagesloaded.pkgd.min.js"></script>
+<script src="js/hammer.min.js"></script>
+<script src="js/sequence.min.js"></script>
+<script src="js/sequence-theme.modern-slide-in.js"></script>
+
+</body>
+
+</html>
