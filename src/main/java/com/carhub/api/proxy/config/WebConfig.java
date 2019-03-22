@@ -31,6 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/index");
         registry.addViewController("/login");
         registry.addViewController("/content");
+        registry.addViewController("/car");
     }
 
     @Override

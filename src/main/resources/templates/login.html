@@ -146,16 +146,16 @@
 			var token = responseObject['access_token'];
 			var validity = responseObject['expires_in'];
 			if(token){
-				if(! Cookies.get('access_token'))
-				{
-					Cookies.set('access_token', token,
-							{
-							path: '/', // available across the entire site
-							expires: 1, //expires in 1 day
-							httpOnly: true, //cookie not available through client js code
-							secure: true // true to force https
-							});
-				}
+				localStorage.setItem('access_token', token);
+				/*
+				Cookies.set('access_token', token,
+						{
+						path: '/', // available across the entire site
+						expires: 1, //expires in 1 day
+						httpOnly: true, //cookie not available through client js code
+						secure: true // true to force https
+						});
+				*/
 				redirectUrl("/content");
 				return;
 			}

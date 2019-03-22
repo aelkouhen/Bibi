@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Carhub Content</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="//use.edgefonts.net/cabin;source-sans-pro:n2,i2,n3,n4,n6,n7,n9.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" type="text/css" href="css/slides.css">
+    <script src="js/utils.js"></script>
+</head>
+<body>
+
+<h2 style="text-align:center">Slideshow Gallery</h2>
+<div class="container" id="root"></div>
+
+<script>
+var token = localStorage.getItem('access_token');
+if(! token){
+    location.href = '/login';
+}
+var slideIndex = 1;
+
+const root = document.getElementById('root');
+var req = new XMLHttpRequest();
+req.open('GET', "/auto/v1/cars/" + $_GET('id') + "/photos", true);
+req.setRequestHeader("Authorization", "Bearer " + token);
+req.onload = function () {
+    // Begin accessing JSON data here
+    var photos = JSON.parse(req.response);
+    if (req.status >= 200 && req.status < 400) {
+        var i =1;
+        photos.forEach(photo => {
+
+             const slide = document.createElement('div');
+             slide.setAttribute('class', 'mySlides');
+             root.appendChild(slide);
+
+             const number = document.createElement('div');
+             number.setAttribute('class', 'numbertext');
+             number.innerHTML =   i++ + '/' + photos.length;
+             slide.appendChild(number);
+
+             const img = document.createElement('img');
+             img.src = 'data:'+ photo.mimeType + ';base64,' + photo.content;
+             img.alt =  photo.caption;
+             slide.appendChild(img);
+        });
+
+             const prev = document.createElement('a');
+             prev.setAttribute('class', 'prev');
+             prev.onclick = plusSlides(-1);
+             prev.innerHTML = '&#10094;';
+             root.appendChild(prev);
+
+             const next = document.createElement('a');
+             next.setAttribute('class', 'next');
+             next.onclick = plusSlides(1);
+             next.value = '&#10095;';
+             root.appendChild(next);
+
+             const caption = document.createElement('div');
+             caption.setAttribute('class', 'caption-container');
+             root.appendChild(caption);
+
+             const paragraph = document.createElement('p');
+             paragraph.id = 'caption';
+             caption.appendChild(paragraph);
+
+    } else {
+        const errorMessage = document.createElement('marquee');
+        errorMessage.textContent = `Gah, it's not working!`;
+        app.appendChild(errorMessage);
+    }
+
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var captionText = document.getElementById("caption");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  slides[slideIndex-1].style.display = "block";
+}
+
+
+}
+req.send();
+
+
+</script>
+
+</body>
+</html>

@@ -10,8 +10,6 @@
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
     <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/catalog.css">
-    <link href="css/sequence-theme.modern-slide-in.css" rel="stylesheet" media="all">
-
 
 </head>
 
@@ -33,8 +31,10 @@ container.setAttribute('class', 'container');
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-var token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiQ0xJRU5UX1JFU09VUkNFIiwiQURNSU5fUkVTT1VSQ0UiXSwidXNlcl9uYW1lIjoiYWRtaW4iLCJzY29wZSI6WyJERUxFVEVfUFJJVklMRUdFIiwiUkVBRF9QUklWSUxFR0UiLCJVUERBVEVfUFJJVklMRUdFIiwiQ1JFQVRFX1BSSVZJTEVHRSJdLCJleHAiOjE1NTMzMzM2ODcsImF1dGhvcml0aWVzIjpbIkRFTEVURV9QUklWSUxFR0UiLCJSRUFEX1BSSVZJTEVHRSIsIlJPTEVfQURNSU4iLCJVUERBVEVfUFJJVklMRUdFIiwiQ1JFQVRFX1BSSVZJTEVHRSIsIlJPTEVfVVNFUiJdLCJqdGkiOiI0OTMzYjAwOC0yY2FjLTRmYzEtOTFjMi0wYzZiNmNjODc3MDYiLCJlbWFpbCI6ImFkbWluQHVzZXIuaW8iLCJjbGllbnRfaWQiOiJBRE1JTl9BUFAifQ.YMvb2cQpmbQhLluvxW9LncDJLbg1UpjjWpYQdkvDTImWolaresmG24lt1-craOEtFehXGa8rH3aUlV_UEVkV-ZTbETPUNOsK9tEQSPU9us6rba87HDIaYpmzBfxhUa3Eb6LoOqmeB7lvCg31pU9alg1gNQyCrgmesCglxi3DeleL8Ky6O75wDVOOgzgyCt1vDharw56oyDN-_EuvmBW4Qt97uiBJjeUFZp0Qm6IZ2EcQTEVxbYRH9lvl0tSP8mXkxTb1NdqRh-UPUlC98lDiyKDo3e48N4UlIwxFxmGxxLZ-XTNw5-GHaHvBaaaVm1LoMLEYpI4-Sf8te2hGnjzb0Q';
-//Cookies.get('access_token');
+var token = localStorage.getItem('access_token');
+if(! token){
+    location.href = '/login';
+}
 request.open('GET', '/auto/v1/cars?page=0&size=10&order=asc&field=name', true);
 request.setRequestHeader("Authorization", "Bearer " + token);
 
@@ -45,88 +45,20 @@ request.onload = function () {
       cars.forEach(car => {
         const card = document.createElement('div');
         card.setAttribute('class', 'card');
+        card.onclick = function() { location.href = '/car?id=' + car.id+ '&name=' + car.name; };
         container.appendChild(card);
 
         const h1 = document.createElement('h1');
         h1.textContent = car.name;
         card.appendChild(h1);
-
-        const sequence = document.createElement('div');
-        sequence.setAttribute('class', 'seq');
-        sequence.setAttribute('id', 'sequence');
-        card.appendChild(sequence);
-        const screen = document.createElement('div');
-        screen.setAttribute('class', 'seq-screen');
-        const canvas = document.createElement('ul');
-        canvas.setAttribute('class', 'seq-canvas');
-        sequence.appendChild(screen);
-
-        const nav = document.createElement('fieldset');
-        nav.setAttribute('class', 'seq-nav');
-        nav.setAttribute('aria-controls', 'sequence');
-        nav.setAttribute('aria-label', 'Slider buttons');
-
-        sequence.appendChild(nav);
-
-        const prev = document.createElement('button');
-        prev.setAttribute('class', 'seq-prev');
-        prev.setAttribute('type', 'button');
-        prev.setAttribute('aria-label', 'Previous');
-        prev.value= 'Previous';
-
-        const next = document.createElement('button');
-        next.setAttribute('class', 'seq-next');
-        next.setAttribute('type', 'button');
-        next.setAttribute('aria-label', 'Next');
-        next.value = 'Next';
-
-        nav.appendChild(prev);
-        nav.appendChild(next);
-
-        screen.appendChild(canvas);
-
-        var req = new XMLHttpRequest();
-        req.open('GET', "/auto/v1/cars/" + car.id + "/photos", true);
-        req.setRequestHeader("Authorization", "Bearer " + token);
-        req.onload = function () {
-              // Begin accessing JSON data here
-              var photos = JSON.parse(req.response);
-              if (req.status >= 200 && req.status < 400) {
-                    photos.forEach(photo => {
-                         const seqIn = document.createElement('li');
-                         seqIn.setAttribute('class', 'seq-in');
-                         canvas.appendChild(seqIn);
-                         const seqModel = document.createElement('div')
-                         seqModel.setAttribute('class', 'seq-model');
-                         seqIn.appendChild(seqModel);
-                         const img = document.createElement('img');
-                         img.src = 'data:'+ photo.mimeType + ';base64,' + photo.content;
-                         seqModel.appendChild(img);
-                    });
-              } else {
-                const errorMessage = document.createElement('marquee');
-                errorMessage.textContent = `Gah, it's not working!`;
-                app.appendChild(errorMessage);
-              }
-            }
-            req.send();
         });
     } else {
-    const errorMessage = document.createElement('marquee');
-    errorMessage.textContent = `Gah, it's not working!`;
-    app.appendChild(errorMessage);
+        location.href = '/login';
     }
 }
 request.send();
-
-
-
 </script>
 
-<script src="js/imagesloaded.pkgd.min.js"></script>
-<script src="js/hammer.min.js"></script>
-<script src="js/sequence.min.js"></script>
-<script src="js/sequence-theme.modern-slide-in.js"></script>
 
 </body>
 
