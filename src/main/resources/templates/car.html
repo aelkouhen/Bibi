@@ -14,16 +14,11 @@
 <div class="container" id="root"></div>
 
 <script>
-var token = localStorage.getItem('access_token');
-if(! token){
-    location.href = '/login';
-}
 var slideIndex = 1;
 
 const root = document.getElementById('root');
 var req = new XMLHttpRequest();
 req.open('GET', "/auto/v1/cars/" + $_GET('id') + "/photos", true);
-req.setRequestHeader("Authorization", "Bearer " + token);
 req.onload = function () {
     // Begin accessing JSON data here
     var photos = JSON.parse(req.response);

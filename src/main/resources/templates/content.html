@@ -22,21 +22,13 @@
 <script src="js/cookies.js"></script>
 
 <script>
-
 const app = document.getElementById('root');
-
 const container = document.createElement('div');
 container.setAttribute('class', 'container');
-
 app.appendChild(container);
 
 var request = new XMLHttpRequest();
-var token = localStorage.getItem('access_token');
-if(! token){
-    location.href = '/login';
-}
 request.open('GET', '/auto/v1/cars?page=0&size=10&order=asc&field=name', true);
-request.setRequestHeader("Authorization", "Bearer " + token);
 
 request.onload = function () {
     // Begin accessing JSON data here

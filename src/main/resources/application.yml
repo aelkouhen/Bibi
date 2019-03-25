@@ -9,9 +9,6 @@ spring:
       app-secret: 36884a5bf449aa541a590945784c0755
 server:
   port: 8080
-  session:
-    cookie:
-      name: UISESSION
 
 endpoints:
   restart:
@@ -25,6 +22,7 @@ eureka:
   instance:
     hostname: localhost
     port: 8000
+    instanceId: ${spring.application.name}:${random.int}
   client:
     fetchRegistry: true
     serviceUrl:
