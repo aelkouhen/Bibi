@@ -36,6 +36,16 @@ zuul:
       serviceId: lyne
       stripPrefix: false
       sensitiveHeaders:
+    social:
+      path: /social/**
+      serviceId: rana
+      stripPrefix: false
+      sensitiveHeaders:
+    media:
+      path: /media/**
+      serviceId: mino
+      stripPrefix: false
+      sensitiveHeaders:
     auth:
       path: /auth/**
       serviceId: mima
