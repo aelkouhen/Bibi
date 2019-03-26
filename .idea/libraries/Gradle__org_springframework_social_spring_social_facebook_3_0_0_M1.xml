@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.springframework.social:spring-social-facebook:3.0.0.M1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.social/spring-social-facebook/3.0.0.M1/e07e3194a414ec945baad2b2fae82041da557108/spring-social-facebook-3.0.0.M1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.social/spring-social-facebook/3.0.0.M1/c25f209cd56cf5f620aa1fb259bf5053d1ab4732/spring-social-facebook-3.0.0.M1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
